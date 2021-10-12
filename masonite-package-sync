@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+"""Craft Command.
+This module is really used in development if package is not locally installed.
+"""
+
+from src.masonite_package_sync.main import application
+
+if __name__ == "__main__":
+    application.run()
