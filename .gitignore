@@ -1,0 +1,12 @@
+# python
+*.pyc
+*__pycache__
+.pytest_cache
+venv
+# environment
+.env
+.env.*
+!.env.testing
+
+.vscode
+**/*.DS_Store

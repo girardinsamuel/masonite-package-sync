@@ -1,9 +1,9 @@
-from cleo import Command
 import subprocess
-import os
 import os
 import shutil
 import tempfile
+
+from cleo import Command
 
 
 class PullCommand(Command):
