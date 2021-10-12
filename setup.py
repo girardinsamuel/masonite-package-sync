@@ -56,6 +56,7 @@ setup(
             "black",
             "flake8",
             "pytest",
+            "twine",
         ],
     },
     packages=find_packages(where="src"),
