@@ -57,6 +57,7 @@ setup(
             "flake8",
             "pytest",
             "twine",
+            "bump2version",
         ],
     },
     packages=find_packages(where="src"),
