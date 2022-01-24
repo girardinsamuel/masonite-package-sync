@@ -8,12 +8,6 @@ from cleo import Command
 from ..utils import replace_string_in_file
 
 
-def ignore_files(directory, files):
-    import pdb
-
-    pdb.set_trace()
-
-
 class PullCommand(Command):
     """
     Pull template project into given directory
@@ -83,9 +77,6 @@ class PullCommand(Command):
                     else:
                         os.remove(abs_path)
                 except FileNotFoundError:
-                    import pdb
-
-                    pdb.set_trace()
                     pass
 
             # if all good
