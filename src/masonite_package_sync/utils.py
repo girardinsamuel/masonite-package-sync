@@ -1,5 +1,3 @@
-
-
 def replace_string_in_file(filepath, searched, replaced):
     with open(filepath) as f:
         file_source = f.read()

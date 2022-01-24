@@ -9,7 +9,9 @@ from ..utils import replace_string_in_file
 
 
 def ignore_files(directory, files):
-    import pdb;pdb.set_trace()
+    import pdb
+
+    pdb.set_trace()
 
 
 class PullCommand(Command):
@@ -81,7 +83,9 @@ class PullCommand(Command):
                     else:
                         os.remove(abs_path)
                 except FileNotFoundError:
-                    import pdb;pdb.set_trace()
+                    import pdb
+
+                    pdb.set_trace()
                     pass
 
             # if all good
@@ -101,44 +105,36 @@ class PullCommand(Command):
             replace_string_in_file(
                 os.path.join(directory, "config/auth.py"),
                 "from app.",
-                "from tests.integrations.app."
+                "from tests.integrations.app.",
             )
 
             replace_string_in_file(
                 os.path.join(directory, "databases/seeds/user_table_seeder.py"),
                 "from app.",
-                "from tests.integrations.app."
+                "from tests.integrations.app.",
             )
 
             replace_string_in_file(
                 os.path.join(directory, "config/filesystem.py"),
                 "storage/",
-                "tests/integrations/storage/"
+                "tests/integrations/storage/",
             )
 
             # Kernel:
             kernel = os.path.join(directory, "Kernel.py")
             tokens = [
-                ("from app.",
-                "from tests.integrations.app."),
-                ("self.application.bind(\"config.location\", \"config\")",
-                "self.application.bind(\"config.location\", \"tests/integrations/config\")"),
-                ("app/",
-                "tests/integrations/app/"),
-                ("routes/web",
-                "tests/integrations/routes/web"),
-                ("resources/",
-                "tests/integrations/resources/"),
-                ("databases/",
-                "tests/integrations/databases/"),
-                ("templates/",
-                "tests/integrations/templates/"),
+                ("from app.", "from tests.integrations.app."),
+                (
+                    'self.application.bind("config.location", "config")',
+                    'self.application.bind("config.location", "tests/integrations/config")',
+                ),
+                ("app/", "tests/integrations/app/"),
+                ("routes/web", "tests/integrations/routes/web"),
+                ("resources/", "tests/integrations/resources/"),
+                ("databases/", "tests/integrations/databases/"),
+                ("templates/", "tests/integrations/templates/"),
             ]
             for search, replace in tokens:
-                replace_string_in_file(
-                    kernel,
-                    search,
-                    replace
-                )
+                replace_string_in_file(kernel, search, replace)
 
         self.line("Pulled !")
