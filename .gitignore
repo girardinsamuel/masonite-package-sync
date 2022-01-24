@@ -10,3 +10,6 @@ venv
 
 .vscode
 **/*.DS_Store
+
+src/masonite_package_sync.egg-info/
+build/
