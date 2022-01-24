@@ -63,7 +63,7 @@ setup(
     packages=find_packages(where="src"),
     entry_points={
         "console_scripts": [
-            "masonite-package = main:application.run",
+            "masonite-package = masonite_package_sync.main:application.run",
         ],
     },
 )
