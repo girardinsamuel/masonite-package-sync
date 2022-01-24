@@ -5,6 +5,12 @@ import tempfile
 
 from cleo import Command
 
+from ..utils import replace_string_in_file
+
+
+def ignore_files(directory, files):
+    import pdb;pdb.set_trace()
+
 
 class PullCommand(Command):
     """
@@ -14,12 +20,13 @@ class PullCommand(Command):
         {--directory=? : By default current directory}
         {--repo=MasoniteFramework/cookie-cutter : Repository to pull from}
         {--branch=? : Repository branch to pull from, default is the default from repo}
-        {--switch-branch=patch/package-sync : Branch to put modifications from}
+        {--switch-branch=? : Branch to put modifications from}
         {--exclude=? : Override default files or folders to exclude (separated by ,)}
     """
 
     EXCLUDE = [
         "tests",
+        ".git",
         "README.md",
         ".gitignore",
         ".env-example",
@@ -65,7 +72,7 @@ class PullCommand(Command):
             # Clone into temporary dir
             subprocess.run(git_clone_args, check=True, stdout=subprocess.PIPE).stdout
 
-            # remove files or folders to ignore
+            # # remove files or folders to ignore
             for path in paths_to_remove:
                 abs_path = os.path.join(source_dir, path)
                 try:
@@ -74,17 +81,64 @@ class PullCommand(Command):
                     else:
                         os.remove(abs_path)
                 except FileNotFoundError:
+                    import pdb;pdb.set_trace()
                     pass
 
             # if all good
             os.chdir(cwd)
-            subprocess.run(
-                ["git", "checkout", "-b", switch_branch],
-                check=True,
-                stdout=subprocess.PIPE,
-            ).stdout
+            if switch_branch:
+                subprocess.run(
+                    ["git", "checkout", "-b", switch_branch],
+                    check=True,
+                    stdout=subprocess.PIPE,
+                ).stdout
 
             # copy all files
             shutil.copytree(source_dir, directory, dirs_exist_ok=True)
+
+        # convert project to work inside given folder
+        if directory:
+            replace_string_in_file(
+                os.path.join(directory, "config/auth.py"),
+                "from app.",
+                "from tests.integrations.app."
+            )
+
+            replace_string_in_file(
+                os.path.join(directory, "databases/seeds/user_table_seeder.py"),
+                "from app.",
+                "from tests.integrations.app."
+            )
+
+            replace_string_in_file(
+                os.path.join(directory, "config/filesystem.py"),
+                "storage/",
+                "tests/integrations/storage/"
+            )
+
+            # Kernel:
+            kernel = os.path.join(directory, "Kernel.py")
+            tokens = [
+                ("from app.",
+                "from tests.integrations.app."),
+                ("self.application.bind(\"config.location\", \"config\")",
+                "self.application.bind(\"config.location\", \"tests/integrations/config\")"),
+                ("app/",
+                "tests/integrations/app/"),
+                ("routes/web",
+                "tests/integrations/routes/web"),
+                ("resources/",
+                "tests/integrations/resources/"),
+                ("databases/",
+                "tests/integrations/databases/"),
+                ("templates/",
+                "tests/integrations/templates/"),
+            ]
+            for search, replace in tokens:
+                replace_string_in_file(
+                    kernel,
+                    search,
+                    replace
+                )
 
         self.line("Pulled !")
