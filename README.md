@@ -28,3 +28,11 @@ python masonite-package pull --repo johndoe/other-project --branch develop
 ```
 python masonite-package pull --directory other/dir/test/
 ```
+
+If you want to update the test project inside your Masonite package do :
+
+```
+python masonite-package pull --directory tests/integrations/
+```
+
+It will replace the project and update paths to work !
